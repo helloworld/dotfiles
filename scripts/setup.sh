@@ -7,6 +7,7 @@ INSTALL_DIR="$DOTFILES_DIR/scripts/install"
 APPS_DIR="$DOTFILES_DIR/scripts/apps"
 DRY_RUN=false
 INSTALL_APPS=false
+VERIFY_MODE=false
 
 # Parse arguments
 for arg in "$@"; do
@@ -17,6 +18,10 @@ for arg in "$@"; do
             ;;
         --apps)
             INSTALL_APPS=true
+            shift
+            ;;
+        --verify)
+            VERIFY_MODE=true
             shift
             ;;
     esac
@@ -44,11 +49,71 @@ run_install_script() {
     fi
     
     # Clear the variables for the next script
-    unset NAME check_installed install
+    unset NAME check_installed install verify
+}
+
+run_verify_script() {
+    local script_path="$1"
+    local script_name=$(basename "$script_path" .sh)
+    
+    # Source the script to get its functions and variables
+    source "$script_path"
+    
+    if ! check_installed; then
+        log "❌ $NAME not installed - skipping verification"
+        unset NAME check_installed install verify
+        return 1
+    fi
+    
+    if declare -f verify >/dev/null 2>&1; then
+        if verify; then
+            log "✅ $NAME verification passed"
+        else
+            log "❌ $NAME verification FAILED"
+            unset NAME check_installed install verify
+            return 1
+        fi
+    else
+        log "⚠️  $NAME has no verification function"
+    fi
+    
+    # Clear the variables for the next script
+    unset NAME check_installed install verify
 }
 
 main() {
-    if [ "$DRY_RUN" = true ]; then
+    if [ "$VERIFY_MODE" = true ]; then
+        log "🔍 VERIFY MODE - Testing all installations..."
+        local failed=0
+        
+        # Verify all install scripts
+        for script in "$INSTALL_DIR"/*.sh; do
+            if [ -f "$script" ] && [ -x "$script" ] && [[ "$(basename "$script")" != "_TEMPLATE.sh" ]]; then
+                if ! run_verify_script "$script"; then
+                    failed=$((failed + 1))
+                fi
+            fi
+        done
+        
+        # Verify apps if they exist
+        if [ -d "$APPS_DIR" ]; then
+            for script in "$APPS_DIR"/*.sh; do
+                if [ -f "$script" ] && [ -x "$script" ] && [[ "$(basename "$script")" != "_TEMPLATE.sh" ]]; then
+                    if ! run_verify_script "$script"; then
+                        failed=$((failed + 1))
+                    fi
+                fi
+            done
+        fi
+        
+        if [ $failed -eq 0 ]; then
+            log "✅ All verifications passed!"
+            exit 0
+        else
+            log "❌ $failed verification(s) failed!"
+            exit 1
+        fi
+    elif [ "$DRY_RUN" = true ]; then
         log "🔍 DRY RUN - Checking installation status..."
     else
         log "Starting dotfiles setup..."
@@ -56,7 +121,7 @@ main() {
     
     # Find and run all install scripts in alphabetical order
     for script in "$INSTALL_DIR"/*.sh; do
-        if [ -f "$script" ] && [ -x "$script" ]; then
+        if [ -f "$script" ] && [ -x "$script" ] && [[ "$(basename "$script")" != "_TEMPLATE.sh" ]]; then
             run_install_script "$script"
         fi
     done
@@ -65,7 +130,7 @@ main() {
     if [ "$INSTALL_APPS" = true ] && [ -d "$APPS_DIR" ]; then
         log "Installing applications..."
         for script in "$APPS_DIR"/*.sh; do
-            if [ -f "$script" ] && [ -x "$script" ]; then
+            if [ -f "$script" ] && [ -x "$script" ] && [[ "$(basename "$script")" != "_TEMPLATE.sh" ]]; then
                 run_install_script "$script"
             fi
         done

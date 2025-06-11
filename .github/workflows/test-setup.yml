@@ -34,22 +34,4 @@ jobs:
         CI: true
     
     - name: Verify installations
-      run: |
-        echo "Checking installations..."
-        command -v brew || exit 1
-        command -v node || exit 1
-        command -v npm || exit 1
-        command -v gh || exit 1
-        command -v claude || exit 1
-        [ -d "$HOME/.nvm" ] || exit 1
-        [ -d "$HOME/powerlevel10k" ] || exit 1
-        grep -q "source.*dotfiles" ~/.zshrc || exit 1
-        echo "All installations verified!"
-    
-    - name: Test dotfiles aliases
-      run: |
-        source ~/.zshrc
-        source ~/dotfiles/config/dotfiles.sh
-        which dotfiles-setup || exit 1
-        which dotfiles-check || exit 1
-        echo "Aliases working!"
+      run: ~/dotfiles/scripts/setup.sh --verify

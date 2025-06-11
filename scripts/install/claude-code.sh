@@ -12,3 +12,8 @@ install() {
     log "Installing Claude Code..."
     npm install -g @anthropic-ai/claude-code
 }
+
+verify() {
+    # Verify Claude Code works
+    claude --version >/dev/null 2>&1
+}

@@ -18,3 +18,10 @@ install() {
     nvm install node
     nvm use node
 }
+
+verify() {
+    # Verify NVM and Node work
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm --version >/dev/null 2>&1 && node --version >/dev/null 2>&1
+}

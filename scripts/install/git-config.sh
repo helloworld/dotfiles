@@ -31,3 +31,8 @@ install() {
     
     log "Git configuration complete"
 }
+
+verify() {
+    # Verify Git config is properly set
+    [ -n "$(git config --global user.name)" ] && [ -n "$(git config --global user.email)" ]
+}

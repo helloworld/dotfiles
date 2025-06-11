@@ -16,3 +16,8 @@ install() {
     log "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 }
+
+verify() {
+    # Verify Homebrew works by checking version
+    brew --version >/dev/null 2>&1
+}

@@ -12,3 +12,8 @@ install() {
     log "Installing Ghostty Terminal..."
     brew install --cask ghostty
 }
+
+verify() {
+    # Verify Ghostty app exists
+    [ -d "/Applications/Ghostty.app" ]
+}

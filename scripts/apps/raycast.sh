@@ -12,3 +12,8 @@ install() {
     log "Installing Raycast..."
     brew install --cask raycast
 }
+
+verify() {
+    # Verify Raycast app exists
+    [ -d "/Applications/Raycast.app" ]
+}

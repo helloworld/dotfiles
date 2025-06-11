@@ -12,3 +12,8 @@ install() {
     log "Installing GitHub CLI..."
     brew install gh
 }
+
+verify() {
+    # Verify GitHub CLI works
+    gh --version >/dev/null 2>&1
+}

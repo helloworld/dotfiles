@@ -10,7 +10,8 @@ git clone https://github.com/helloworld/dotfiles.git ~/dotfiles
 
 ### Commands
 - `dotfiles-setup` - Run full setup
-- `dotfiles-check` - Dry run check
+- `dotfiles-check` - Dry run check  
+- `dotfiles-verify` - Test all installations
 - `dotfiles-apps` - Install applications
 - `dotfiles-apps-check` - Check app installations
 
@@ -21,8 +22,8 @@ git clone https://github.com/helloworld/dotfiles.git ~/dotfiles
 
 ### Adding Tools
 1. Copy `scripts/install/_TEMPLATE.sh` to new file
-2. Edit `NAME`, `check_installed()`, `install()` functions  
+2. Edit `NAME`, `check_installed()`, `install()`, `verify()` functions  
 3. `chmod +x` the new script
-4. Test with `dotfiles-check`
+4. Test with `dotfiles-check` and `dotfiles-verify`
 
-Scripts auto-discovered from `scripts/install/` directory.
+Scripts auto-discovered from `scripts/install/` directory. The `verify()` function automatically adds testing to CI.

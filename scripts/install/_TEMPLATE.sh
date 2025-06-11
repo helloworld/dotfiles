@@ -30,3 +30,16 @@ install() {
     # curl -fsSL https://example.com/install.sh | bash
     # git clone https://github.com/user/repo.git ~/tool_name
 }
+
+verify() {
+    # Verify the installation actually works
+    # This function is run during --verify mode to test the installation
+    # Return 0 if verification passes, 1 if it fails
+    
+    # Examples:
+    # tool_name --version >/dev/null 2>&1               # Check if tool runs
+    # test -r "$HOME/.tool_config"                      # Check if config is readable
+    # tool_name test-command >/dev/null 2>&1            # Run a test command
+    
+    return 0  # Replace with actual verification
+}
