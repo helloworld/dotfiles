@@ -4,13 +4,19 @@ set -e
 
 DOTFILES_DIR="$HOME/dotfiles"
 INSTALL_DIR="$DOTFILES_DIR/scripts/install"
+APPS_DIR="$DOTFILES_DIR/scripts/apps"
 DRY_RUN=false
+INSTALL_APPS=false
 
 # Parse arguments
 for arg in "$@"; do
     case $arg in
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --apps)
+            INSTALL_APPS=true
             shift
             ;;
     esac
@@ -54,6 +60,16 @@ main() {
             run_install_script "$script"
         fi
     done
+    
+    # Install apps if requested
+    if [ "$INSTALL_APPS" = true ] && [ -d "$APPS_DIR" ]; then
+        log "Installing applications..."
+        for script in "$APPS_DIR"/*.sh; do
+            if [ -f "$script" ] && [ -x "$script" ]; then
+                run_install_script "$script"
+            fi
+        done
+    fi
     
     if [ "$DRY_RUN" = true ]; then
         log "🔍 DRY RUN complete - no changes made"

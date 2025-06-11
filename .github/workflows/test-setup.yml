@@ -1,0 +1,55 @@
+name: Test Dotfiles Setup
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-setup:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout dotfiles
+      uses: actions/checkout@v4
+      with:
+        path: dotfiles
+    
+    - name: Move dotfiles to home directory
+      run: mv dotfiles ~/dotfiles
+    
+    - name: Set up Git config for testing
+      run: |
+        git config --global user.name "Test User"
+        git config --global user.email "test@example.com"
+    
+    - name: Run dry-run setup check
+      run: ~/dotfiles/scripts/setup.sh --dry-run
+    
+    - name: Run install scripts setup
+      run: ~/dotfiles/scripts/setup.sh
+      env:
+        # Skip interactive prompts
+        CI: true
+    
+    - name: Verify installations
+      run: |
+        echo "Checking installations..."
+        command -v brew || exit 1
+        command -v node || exit 1
+        command -v npm || exit 1
+        command -v gh || exit 1
+        command -v claude || exit 1
+        [ -d "$HOME/.nvm" ] || exit 1
+        [ -d "$HOME/powerlevel10k" ] || exit 1
+        grep -q "source.*dotfiles" ~/.zshrc || exit 1
+        echo "All installations verified!"
+    
+    - name: Test dotfiles aliases
+      run: |
+        source ~/.zshrc
+        source ~/dotfiles/config/dotfiles.sh
+        which dotfiles-setup || exit 1
+        which dotfiles-check || exit 1
+        echo "Aliases working!"
