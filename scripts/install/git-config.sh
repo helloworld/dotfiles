@@ -11,17 +11,30 @@ check_installed() {
 install() {
     log "Setting up Git configuration..."
     
-    # Prompt for user details if not already set
+    # Set default values for helloworld account
     if [ -z "$(git config --global user.name)" ]; then
-        echo "Enter your full name for Git commits:"
-        read -r git_name
-        git config --global user.name "$git_name"
+        if [ "$CI" = true ]; then
+            # In CI, use default values
+            git config --global user.name "Sashank Thupukari"
+            git config --global user.email "3893054+helloworld@users.noreply.github.com"
+        else
+            echo "Enter your full name for Git commits (default: Sashank Thupukari):"
+            read -r git_name
+            git_name=${git_name:-"Sashank Thupukari"}
+            git config --global user.name "$git_name"
+        fi
     fi
     
     if [ -z "$(git config --global user.email)" ]; then
-        echo "Enter your email for Git commits:"
-        read -r git_email
-        git config --global user.email "$git_email"
+        if [ "$CI" = true ]; then
+            # In CI, use default values
+            git config --global user.email "3893054+helloworld@users.noreply.github.com"
+        else
+            echo "Enter your email for Git commits (default: 3893054+helloworld@users.noreply.github.com):"
+            read -r git_email
+            git_email=${git_email:-"3893054+helloworld@users.noreply.github.com"}
+            git config --global user.email "$git_email"
+        fi
     fi
     
     # Set useful Git defaults

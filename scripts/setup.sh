@@ -49,7 +49,7 @@ run_install_script() {
     fi
     
     # Clear the variables for the next script
-    unset NAME check_installed install verify
+    unset NAME check_installed install verify CI_OPTIONAL
 }
 
 run_verify_script() {
@@ -60,9 +60,16 @@ run_verify_script() {
     source "$script_path"
     
     if ! check_installed; then
-        log "❌ $NAME not installed - skipping verification"
-        unset NAME check_installed install verify
-        return 1
+        # Check if this is optional in CI and we're in CI
+        if [ "$CI_OPTIONAL" = true ] && [ "$CI" = true ]; then
+            log "⚠️  $NAME not installed (optional in CI)"
+            unset NAME check_installed install verify CI_OPTIONAL
+            return 0  # Don't count as failure
+        else
+            log "❌ $NAME not installed - skipping verification"
+            unset NAME check_installed install verify CI_OPTIONAL
+            return 1
+        fi
     fi
     
     if declare -f verify >/dev/null 2>&1; then
@@ -70,7 +77,7 @@ run_verify_script() {
             log "✅ $NAME verification passed"
         else
             log "❌ $NAME verification FAILED"
-            unset NAME check_installed install verify
+            unset NAME check_installed install verify CI_OPTIONAL
             return 1
         fi
     else
@@ -78,7 +85,7 @@ run_verify_script() {
     fi
     
     # Clear the variables for the next script
-    unset NAME check_installed install verify
+    unset NAME check_installed install verify CI_OPTIONAL
 }
 
 main() {

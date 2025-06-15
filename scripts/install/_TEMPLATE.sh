@@ -5,6 +5,7 @@
 # The setup.sh will automatically discover and run all .sh files in this directory
 
 NAME="Your Tool Name"
+# CI_OPTIONAL=true  # Uncomment if this tool should not fail CI when missing
 
 check_installed() {
     # Return 0 if installed, 1 if not installed

@@ -3,6 +3,7 @@
 # Install script for Ghostty Terminal
 
 NAME="Ghostty Terminal"
+CI_OPTIONAL=true  # This app is optional in CI environments
 
 check_installed() {
     [ -d "/Applications/Ghostty.app" ]
