@@ -8,12 +8,22 @@ git clone https://github.com/helloworld/dotfiles.git ~/dotfiles
 ~/dotfiles/scripts/setup.sh
 ```
 
-### Commands
-- `dotfiles-setup` - Run full setup
-- `dotfiles-check` - Dry run check  
-- `dotfiles-verify` - Test all installations
-- `dotfiles-apps` - Install applications
-- `dotfiles-apps-check` - Check app installations
+### Quick Commands
+- `dots` - Run full setup
+- `check` - Dry run check  
+- `verify` - Test all installations
+- `apps` - Install applications
+
+### Make Commands
+- `make help` - Show all available commands
+- `make setup` - Run full dotfiles setup
+- `make check` - Check installation status
+- `make verify` - Verify all installations work
+- `make apps` - Install applications
+- `make new-app APP=name` - Create new app script
+- `make new-install TOOL=name` - Create new install script
+- `make claude-app APP=name` - Generate Claude command for app
+- `make claude-install TOOL=name` - Generate Claude command for tool
 
 ### What's Installed
 - Homebrew, NVM, Claude Code, GitHub CLI

@@ -9,11 +9,16 @@ DOTFILES_DIR="$HOME/dotfiles"
 export PATH="$PATH:$DOTFILES_DIR/scripts"
 
 # Add any custom aliases here
+alias dots="$DOTFILES_DIR/scripts/setup.sh"
+alias check="$DOTFILES_DIR/scripts/setup.sh --dry-run"
+alias verify="$DOTFILES_DIR/scripts/setup.sh --verify"
+alias apps="$DOTFILES_DIR/scripts/setup.sh --apps"
+
+# Legacy aliases for backwards compatibility
 alias dotfiles-setup="$DOTFILES_DIR/scripts/setup.sh"
 alias dotfiles-check="$DOTFILES_DIR/scripts/setup.sh --dry-run"
 alias dotfiles-verify="$DOTFILES_DIR/scripts/setup.sh --verify"
 alias dotfiles-apps="$DOTFILES_DIR/scripts/setup.sh --apps"
-alias dotfiles-apps-check="$DOTFILES_DIR/scripts/setup.sh --dry-run --apps"
 
 # Source powerlevel10k if it exists and we're in zsh
 if [[ -f ~/powerlevel10k/powerlevel10k.zsh-theme ]] && [[ "$0" == *"zsh"* || -n "$ZSH_VERSION" ]]; then
